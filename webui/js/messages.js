@@ -17,27 +17,27 @@ const STEP_COLLAPSE_DELAY_MS = 3000;
 // Delay before collapsing the last step when processing completes
 const FINAL_STEP_COLLAPSE_DELAY_MS = 3000;
 
-// // Tool-specific status codes (fallback for tool steps)
-// const TOOL_STATUS_CODES = {
-//   call_subordinate: "SUB",
-//   search_engine: "WEB",
-//   a2a_chat: "A2A",
-//   behaviour_adjustment: "ADJ",
-//   document_query: "DOC",
-//   vision_load: "EYE",
-//   notify_user: "NTF",
-//   scheduler: "SCH",
-//   unknown: "UNK",
-//   memory_save: "MEM",
-//   memory_load: "MEM",
-//   memory_forget: "MEM",
-//   memory_delete: "MEM",
-// };
+// Tool-specific status codes (fallback for tool steps)
+const TOOL_STATUS_CODES = {
+  call_subordinate: "SUB",
+  search_engine: "WEB",
+  a2a_chat: "A2A",
+  behaviour_adjustment: "ADJ",
+  document_query: "DOC",
+  vision_load: "EYE",
+  notify_user: "NTF",
+  scheduler: "SCH",
+  unknown: "UNK",
+  memory_save: "MEM",
+  memory_load: "MEM",
+  memory_forget: "MEM",
+  memory_delete: "MEM",
+};
 
 // Tool-specific status classes (fallback for tool steps)
-// const TOOL_STATUS_CLASSES = {
-//   call_subordinate: "status-sub",
-// };
+const TOOL_STATUS_CLASSES = {
+  call_subordinate: "status-sub",
+};
 
 const TYPE_STATUS_CODES = {
   // agent: "GEN",
@@ -189,19 +189,19 @@ function appendToMessageGroup(
   }
 }
 
-// function getStatusCode(type, toolName = null) {
-//   if (type === "tool" && toolName && TOOL_STATUS_CODES[toolName]) {
-//     return TOOL_STATUS_CODES[toolName];
-//   }
-//   return TYPE_STATUS_CODES[type] || type?.toUpperCase()?.slice(0, 4) || "GEN";
-// }
+function getStatusCode(type, toolName = null) {
+  if (type === "tool" && toolName && TOOL_STATUS_CODES[toolName]) {
+    return TOOL_STATUS_CODES[toolName];
+  }
+  return TYPE_STATUS_CODES[type] || type?.toUpperCase()?.slice(0, 4) || "GEN";
+}
 
-// function getStatusClass(type, toolName = null) {
-//   if (type === "tool" && toolName && TOOL_STATUS_CLASSES[toolName]) {
-//     return TOOL_STATUS_CLASSES[toolName];
-//   }
-//   return TYPE_STATUS_CLASSES[type] || "status-gen";
-// }
+function getStatusClass(type, toolName = null) {
+  if (type === "tool" && toolName && TOOL_STATUS_CLASSES[toolName]) {
+    return TOOL_STATUS_CLASSES[toolName];
+  }
+  return TYPE_STATUS_CLASSES[type] || "status-gen";
+}
 
 // /**
 //  * Resolve tool name from kvps, existing attribute, or previous siblings
@@ -986,7 +986,10 @@ export function drawMessageResponse({
     actionButtonsContainer.appendChild(button),
   );
 
-  if (group) updateProcessGroupHeader(group);
+  if (group) {
+    updateProcessGroupHeader(group);
+    markProcessGroupComplete(group, heading);
+  }
 
   return container;
 }
