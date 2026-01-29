@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh search repos:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "WebFetch(domain:patch-diff.githubusercontent.com)",
+      "Bash(gh pr checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

@@ -199,6 +199,11 @@ api_keys_round_robin: dict[str, int] = {}
 
 
 def get_api_key(service: str) -> str:
+    # Check for OAuth specific tokens first if applicable
+    if service.lower() == "github_copilot":
+        token = dotenv.get_dotenv_value("GITHUB_COPILOT_TOKEN")
+        if token: return token
+
     # get api key for the service
     key = (
         dotenv.get_dotenv_value(f"API_KEY_{service.upper()}")

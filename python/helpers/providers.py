@@ -7,6 +7,7 @@ from typing import List, Dict, Optional, TypedDict
 class FieldOption(TypedDict):
     value: str
     label: str
+    auth_type: Optional[str]
 
 class ProviderManager:
     _instance = None
@@ -64,8 +65,9 @@ class ProviderManager:
             for p in providers:
                 pid = (p.get("id") or p.get("value") or "").lower()
                 name = p.get("name") or p.get("label") or pid
+                auth_type = p.get("auth_type") or "api_key"
                 if pid:
-                    opts.append({"value": pid, "label": name})
+                    opts.append({"value": pid, "label": name, "auth_type": auth_type})
             self._options[p_type] = opts
 
     def get_providers(self, provider_type: str) -> List[FieldOption]:

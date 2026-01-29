@@ -36,6 +36,7 @@ chat:
   github_copilot:
     name: GitHub Copilot
     litellm_provider: github_copilot
+    auth_type: oauth
     kwargs:
       extra_headers:
         "Editor-Version": "vscode/1.85.1"
@@ -43,6 +44,7 @@ chat:
   google:
     name: Google
     litellm_provider: gemini
+    auth_type: oauth
   groq:
     name: Groq
     litellm_provider: groq
@@ -74,6 +76,10 @@ chat:
   sambanova:
     name: Sambanova
     litellm_provider: sambanova
+  qwen:
+    name: Qwen (Alibaba)
+    litellm_provider: dashscope
+    auth_type: api_key
   venice:
     name: Venice.ai
     litellm_provider: openai
