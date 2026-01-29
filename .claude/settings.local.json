@@ -8,7 +8,10 @@
       "WebFetch(domain:patch-diff.githubusercontent.com)",
       "Bash(gh pr checkout:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)",
+      "Bash(where gh:*)"
     ]
   }
 }
