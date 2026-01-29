@@ -975,9 +975,10 @@ export function drawMessageResponse({
         createActionButton("copy", "", () => copyToClipboard(responseText)),
       ].filter(Boolean)
     : [];
+  // Look for direct child only to avoid finding nested code block buttons
   const actionButtonsContainer = ensureChild(
     messageDiv,
-    ".step-action-buttons",
+    ":scope > .step-action-buttons",
     "div",
     "step-action-buttons",
   );
@@ -1886,16 +1887,51 @@ function convertPathsToLinks(str) {
     .join("");
 }
 
+// markdown render helpers //
+
+// wraps an element with a container div
+const wrapElement = (el, className) => {
+  const wrapper = document.createElement("div");
+  wrapper.className = className;
+  el.parentNode.insertBefore(wrapper, el);
+  wrapper.appendChild(el);
+  return wrapper;
+};
+
+// data extractors
+const extractTableTSV = (table) =>
+  [...table.rows]
+    .map((row) =>
+      [...row.cells]
+        .map((cell) => cell.textContent.replace(/\t/g, "  ").replace(/\n/g, " "))
+        .join("\t"),
+    )
+    .join("\n");
+
 function adjustMarkdownRender(element) {
   // find all tables in the element
-  const elements = element.querySelectorAll("table");
+  const tables = element.querySelectorAll("table");
+  tables.forEach((el) => {
+    const wrapper = wrapElement(el, "message-markdown-table-wrap");
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "step-action-buttons";
+    actionsDiv.appendChild(
+      createActionButton("copy", "", () => copyToClipboard(extractTableTSV(el)))
+    );
+    wrapper.appendChild(actionsDiv);
+  });
 
-  // wrap each with a div with class message-markdown-table-wrap
-  elements.forEach((el) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "message-markdown-table-wrap";
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
+  // find all code blocks
+  const codeElements = element.querySelectorAll("pre > code");
+  codeElements.forEach((code) => {
+    const pre = code.parentNode;
+    const wrapper = wrapElement(pre, "code-block-wrapper");
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "step-action-buttons";
+    actionsDiv.appendChild(
+      createActionButton("copy", "", () => copyToClipboard(code.textContent))
+    );
+    wrapper.appendChild(actionsDiv);
   });
 
   // find all images
